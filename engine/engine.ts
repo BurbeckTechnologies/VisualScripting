@@ -9,13 +9,13 @@ export class Engine {
     private readonly hookConnections: HookConnection[],
   ) {}
 
-  public start(startId: string) {
+  public async start(startId: string) {
     const executionContext = new ExecutionContext(this.nodes, this.hookConnections);
     const startNode = this.findNodeById(startId);
     if (!startNode) {
       throw new Error('Unable to find start node by startId.');
     }
-    const startNodeResult = startNode.execute(executionContext);
+    const startNodeResult = await startNode.execute(executionContext);
     startNode.successful = startNodeResult.success;
 
     let nodesToExecute = this.getNextLogicNodes(startNode);
@@ -29,7 +29,7 @@ export class Engine {
       }
 
       // Execute nodes
-      this.executePhase(executionContext, executableNodes);
+      await this.executePhase(executionContext, executableNodes);
 
       executableNodes.forEach((node) => {
         // Remove Nodes whcih have executed
@@ -52,12 +52,12 @@ export class Engine {
     // TODO: Set nodes as failed which cant execute
   }
 
-  private executePhase(executionContext: ExecutionContext, nodes: BaseNode[]): void {
+  private async executePhase(executionContext: ExecutionContext, nodes: BaseNode[]): Promise<void> {
     executionContext.increasePhaseCounter();
-    nodes.forEach((node) => {
-      const r = node.execute(executionContext);
-      node.successful = r.success;
-    });
+    for (let i = 0; i < nodes.length; i++) {
+      const r = await nodes[i].execute(executionContext);
+      nodes[i].successful = r.success;
+    }
   }
 
   private filterExecutableNodes(nodes: BaseNode[]): BaseNode[] {

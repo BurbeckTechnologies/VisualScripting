@@ -25,9 +25,9 @@ export abstract class BaseNode {
     this.mSuccessful = success;
   }
 
-  public abstract execute(
+  public abstract async execute(
     executionContext: ExecutionContext,
-  ): NodeExecutionResult;
+  ): Promise<NodeExecutionResult>;
 
   public getHookDataByIdentifier(identifier: string, index?: number): any | null {
     const data = this.hookData[identifier];

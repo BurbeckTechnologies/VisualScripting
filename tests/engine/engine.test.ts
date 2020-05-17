@@ -6,25 +6,25 @@ import { HookConnection, Connection } from '../../models/connection.ts';
 import { Engine } from '../../engine/engine.ts';
 
 class StartNode extends BaseNode {
-  public execute(
+  public async execute(
     _: ExecutionContext,
-  ): NodeExecutionResult {
+  ): Promise<NodeExecutionResult> {
     return new NodeExecutionResult(true);
   }
 }
 
 class StaticNumberNode extends BaseNode {
-  public execute(
+  public async execute(
     _: ExecutionContext,
-  ): NodeExecutionResult {
+  ): Promise<NodeExecutionResult> {
     return new NodeExecutionResult(true);
   }
 }
 
 class AddNumbersNode extends BaseNode {
-  public execute(
+  public async execute(
     executionContext: ExecutionContext,
-  ): NodeExecutionResult {
+  ): Promise<NodeExecutionResult> {
     const first = executionContext.getInputDataForHook(this, 'number-1-in');
     const second = executionContext.getInputDataForHook(this, 'number-2-in');
     if (first && second && first.type === 'number' && second.type === 'number') {
@@ -37,7 +37,7 @@ class AddNumbersNode extends BaseNode {
 
 Deno.test({
   name: 'Engine should add two numbers via input hooks',
-  fn() : void {
+  async fn() : Promise<void> {
     const startNode = new StartNode('start');
     const number1Node = new StaticNumberNode('123', { 'number-out': 5 });
     const number2Node = new StaticNumberNode('456', { 'number-out': 6 });
@@ -65,7 +65,7 @@ Deno.test({
       [logicConnection1, logicConnection2, logicConnection3, logicConnection4],
       [number1ToAddHookConnection, number2ToAddHookConnection],
     );
-    engine.start('start');
+    await engine.start('start');
     const r = addNumbersNode.getHookDataByIdentifier('number-out');
     equal(r, 11);
   },

@@ -6,9 +6,9 @@ import { NodeExecutionResult } from '../../models/nodeExecutionResult.ts';
 import { HookConnection } from '../../models/connection.ts';
 
 class TestNode extends BaseNode {
-  public execute(
+  public async execute(
     _: ExecutionContext,
-  ): NodeExecutionResult {
+  ): Promise<NodeExecutionResult> {
     return new NodeExecutionResult(false, 'Not Implemented.');
   }
 }
