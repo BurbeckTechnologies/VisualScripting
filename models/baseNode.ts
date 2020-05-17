@@ -5,6 +5,8 @@ export abstract class BaseNode {
 
   private mSuccessful: boolean | undefined = undefined;
 
+  private mError: string | undefined = undefined;
+
   constructor(
     public readonly id: string,
     private readonly hookData: any = {},
@@ -23,6 +25,14 @@ export abstract class BaseNode {
 
   public set successful(success: boolean) {
     this.mSuccessful = success;
+  }
+
+  public set error(err: string | undefined) {
+    this.mError = err;
+  }
+
+  public get error(): string | undefined {
+    return this.mError;
   }
 
   public abstract async execute(

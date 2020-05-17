@@ -17,6 +17,10 @@ export class ExecutionContext {
     return this.phaseCounter;
   }
 
+  public getFailedNodes(): BaseNode[] {
+    return this.nodes.filter((node) => !node.successful);
+  }
+
   public getGlobalVariable(name: string): Variable | null {
     const variable = this.globalVariables.find((variable) => variable[0] === name);
 

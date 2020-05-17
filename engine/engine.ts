@@ -9,7 +9,7 @@ export class Engine {
     private readonly hookConnections: HookConnection[],
   ) {}
 
-  public async start(startId: string) {
+  public async start(startId: string): Promise<ExecutionContext> {
     const executionContext = new ExecutionContext(this.nodes, this.hookConnections);
     const startNode = this.findNodeById(startId);
     if (!startNode) {
@@ -49,7 +49,7 @@ export class Engine {
       executableNodes = this.filterExecutableNodes(nodesToExecute);
     }
 
-    // TODO: Set nodes as failed which cant execute
+    return executionContext;
   }
 
   private async executePhase(executionContext: ExecutionContext, nodes: BaseNode[]): Promise<void> {
@@ -57,6 +57,7 @@ export class Engine {
     for (let i = 0; i < nodes.length; i++) {
       const r = await nodes[i].execute(executionContext);
       nodes[i].successful = r.success;
+      nodes[i].error = r.error;
     }
   }
 
