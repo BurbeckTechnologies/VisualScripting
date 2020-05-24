@@ -52,13 +52,27 @@ export class ExecutionContext {
       connection.toHookId === hookIdentifier
       && connection.toId === node.id);
     if (!hookConnection) {
-      return node.getHookDataByIdentifier(hookIdentifier);
+      const oData = node.getHookDataByIdentifier(hookIdentifier);
+      return oData === null
+        ? null
+        : new Variable(
+          hookIdentifier,
+          'DefaultDataType',
+          oData,
+        );
     }
 
     // Get hooks start node via connection
     const previousNodeHook = this.nodes.find((n) => n.id === hookConnection.fromId);
     if (!previousNodeHook) {
-      return node.getHookDataByIdentifier(hookIdentifier);
+      const oData = node.getHookDataByIdentifier(hookIdentifier);
+      return oData === null
+        ? null
+        : new Variable(
+          hookIdentifier,
+          'DefaultDataType',
+          oData,
+        );
     }
 
     // Get data from previous node
